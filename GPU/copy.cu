@@ -161,9 +161,9 @@ void printHistogram(vector<unsigned char> left_image_vector){
   //Generate Hisotgram
   cout<<"Size of LEFT IMAGE: "<<left_image_vector.size()<<endl;
   for(int i = 0; i < left_image_vector.size(); i+=4){
-    //histogram_r[left_image_vector[i]/histogram_steps]++;
-    // histogram_g[(int)(left_image_vector[i+1])/histogram_steps]++;
-    // histogram_b[(int)(left_image_vector[i+2])/histogram_steps]++;
+    histogram_r[left_image_vector[i]/histogram_steps]++;
+    histogram_g[(int)(left_image_vector[i+1])/histogram_steps]++;
+    histogram_b[(int)(left_image_vector[i+2])/histogram_steps]++;
   }
   cout<<"RED"<<endl;
   for(int i = 0; i<histogram_steps;i++){
@@ -211,8 +211,30 @@ vector<size_t> sort_indexes(const vector<T> &v) {
 
 }
 
+
+
+
+
+
+void preprocessing(vector<unsigned char> left_image_vector,vector<unsigned char> right_image_vector, int methodc, char* methodv[]){
+  cout<<"Received parameter count: "<<methodc<<"\n";
+  for(int i = 4; i < methodc; i++){
+    if(strcmp(methodv[i],"histogram") == 0){
+      printHistogram(left_image_vector);
+    }
+    else if(strcmp(methodv[i],"option2") == 0){
+      printHistogram(left_image_vector);
+    }
+    else{
+      cout<<"No preprocessing: "<<methodv[i]<<".\n";
+    }
+
+  }
+}
+
+
 int main(int argc, char** argv) {
-  if(argc != 4) {
+  if(argc < 4) {
     cout << "Run with left, right and output image filenames." << endl;
     return 0;
   }
@@ -242,11 +264,18 @@ int main(int argc, char** argv) {
   } 
   cout << "done preparing"<<endl;
 
- 
 
-  printHistogram(left_image_vector);
+  
+  if(argc>4){
+    preprocessing(left_image_vector,right_image_vector,argc,argv);
+  }else{
+      cout<<"No preprocessing.\n";
+  }
+
+
 
   /*
+
   int* reds{ new int[left_image_vector.size()/4]{} }; 
   int* greens{ new int[left_image_vector.size()/4]{} }; 
   int* blues{ new int[left_image_vector.size()/4]{} }; 
@@ -276,6 +305,13 @@ int main(int argc, char** argv) {
   }
   printHistogram(left_image_vector);
   */
+
+
+
+
+
+
+
 
 
   auto time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
